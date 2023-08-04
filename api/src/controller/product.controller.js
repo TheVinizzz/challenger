@@ -2,8 +2,8 @@ import { createProduct, getAll, deleteProduct, getByID, updateProduct } from "..
 import { productValidation } from "../validation/product.validation";
 import Stripe from "stripe"
 
-const stripe = new Stripe("sk_test_51NazlFItNQxscDgf0aSd1aY7d0EFn4uY19oGDxfH2pN1r7MBIAVJ1SQ9ZaUIr4l6GUFcJz63Cjxo9hbuir2H1VWY000bU3oYXO", {
-  apiVersion: '2020-08-27',
+const stripe = new Stripe(process.env.SECRET_KEY_STRIPE, {
+  apiVersion: '2023-08-01',
 });
 
 export const get = async (req, res) => {
