@@ -22,14 +22,13 @@ const FormProduct = () => {
     handleSubmit,
     register,
     watch,
-    getValues,
     setValue,
     reset,
     formState: { errors, isSubmitting },
   }: any = useForm({
     defaultValues: data
   })
-  console.log("🚀 ~ file: index.tsx:26 ~ FormProduct ~ getValues:", getValues())
+
   const onSubmit = async (values: any) => {
     try {
       if (!id) {
@@ -54,6 +53,9 @@ const FormProduct = () => {
         status: "error",
         isClosable: true,
       })
+    }
+    finally {
+      navigate(0)
     }
   }
 
@@ -83,7 +85,8 @@ const FormProduct = () => {
     return () => reset({
       name: '',
       description: '',
-      price: ''
+      price: '',
+      photo: null
     })
   }, [data])
 
@@ -120,8 +123,6 @@ const FormProduct = () => {
                 aria-hidden="true"
                 accept="image/*"
                 cursor="pointer"
-                id='photo'
-                name="photo"
                 {...register('photo', requestImageEdit())}
               />
               <Text color="red" mt="10px" textAlign="center">
