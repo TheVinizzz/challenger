@@ -1,4 +1,4 @@
-import { deleteProductData, get, getId, update, create } from "../controller/product.controller";
+import { deleteProductData, get, getId, update, create, paymentProducts } from "../controller/product.controller";
 import uploadImage from "../utils/saveLocalImage"
 
 const productRoutes = app => {
@@ -7,6 +7,7 @@ const productRoutes = app => {
     app.put("/product/:id", uploadImage, update);
     app.delete("/product/:id", deleteProductData);
     app.post("/create", uploadImage, create);
+    app.post("/payment", paymentProducts);
 }
 
 export default productRoutes;

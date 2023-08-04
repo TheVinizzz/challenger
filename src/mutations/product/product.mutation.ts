@@ -65,10 +65,22 @@ const useMutateProduct = () => {
       queryClient.invalidateQueries(["getProducts"]);
     }
   });
+
+  const paymentProducts = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await api.post(`/payment`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getProducts"]);
+    }
+  });
+
   return {
     createProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    paymentProducts
   }
 }
 

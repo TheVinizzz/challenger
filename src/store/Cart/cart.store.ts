@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { IProduct } from '../Product/product.store.type';
-import { ICartState, ICartStore } from './cart.store.type';
+import { ICartState } from './cart.store.type';
 
 const useCartStore = create<any>(persist((set) => ({
   listCart: [],

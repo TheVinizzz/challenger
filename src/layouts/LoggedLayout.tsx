@@ -1,12 +1,15 @@
+import Payment from "@/components/Payment";
 import { urlApplication } from "@/service/api";
 import useCartStore from "@/store/Cart/cart.store";
 import { IProduct } from "@/store/Product/product.store.type";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Heading, Menu, MenuButton, MenuItem, MenuList, Image, Button, Text, useToast } from "@chakra-ui/react";
+import { Box, Heading, Menu, MenuButton, MenuItem, MenuList, Image, Button, Text, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { PlusCircle, ShoppingCart } from "lucide-react";
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export default function LoggedLayout() {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const { listCart, setClearCart } = useCartStore()
 
@@ -23,7 +26,12 @@ export default function LoggedLayout() {
     })
   }
 
+  const onClose = () => {
+    setIsOpen(false)
+  }
+
   const totalValueCart = listCart?.reduce((acc: number, val: IProduct) => acc + Number(val.price), 0)
+  const maskTotal = totalValueCart.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
 
   return (
     <Box height="100vh">
@@ -82,17 +90,18 @@ export default function LoggedLayout() {
                         fontWeight="bold"
                         fontSize="14px"
                       >
-                        R$ {val.price}
+                        {Number(val.price).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
                       </Text>
                     </MenuItem>
                   ))}
                   <MenuItem display="flex" flexDirection="column" alignItems="center" gap="2" _hover={{ bg: 'none' }}>
-                    <Text fontWeight="bold" fontSize="14px">Total R$ {totalValueCart}</Text>
+                    <Text fontWeight="bold" fontSize="14px">Total { maskTotal }</Text>
                     <Button
                       variant='solid'
                       bg='maisTodos.100'
                       color="#ffff"
                       _hover={{ bg: 'maisTodos.200' }}
+                      onClick={() => setIsOpen(true)}
                     >
                       Finalizar Compra
                     </Button>
@@ -114,6 +123,25 @@ export default function LoggedLayout() {
       <Box bg="brand.100" minH="100%">
         <Outlet />
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Realizar Pagamento</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {listCart.length > 0 && `Suas compras deram um total de ${maskTotal ?? maskTotal}`}
+            <Box my="20px">
+              <Payment value={totalValueCart}/>
+            </Box>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant='ghost' mr={3} onClick={onClose}>Cancelar</Button>
+            <Button colorScheme='red' onClick={onClose}>
+              Voltar as compras
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

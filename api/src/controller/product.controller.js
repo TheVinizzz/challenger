@@ -1,5 +1,10 @@
 import { createProduct, getAll, deleteProduct, getByID, updateProduct } from "../repository/product.repository";
 import { productValidation } from "../validation/product.validation";
+import Stripe from "stripe"
+
+const stripe = new Stripe("sk_test_51NazlFItNQxscDgf0aSd1aY7d0EFn4uY19oGDxfH2pN1r7MBIAVJ1SQ9ZaUIr4l6GUFcJz63Cjxo9hbuir2H1VWY000bU3oYXO", {
+  apiVersion: '2020-08-27',
+});
 
 export const get = async (req, res) => {
     try {
@@ -22,7 +27,6 @@ export const getId = async (req, res) => {
 }
 
 export const update = async (req, res) => {
-    console.log("🚀 ~ file: product.controller.js:25 ~ update ~ res:", req?.file?.filename)
     try {
         let product = req.body
         if(req?.file?.filename) {
@@ -56,5 +60,31 @@ export const create = async (req, res) => {
     catch (e) {
         console.log(e)
         res.status(400).send(e.errors)
+    }
+}
+
+export const paymentProducts = async (req, res) => {
+  let {amount, id} = req.body
+
+    try {
+        const payment = await stripe.paymentIntents.create({
+            amount,
+            currency: "USD",
+            description: "Payment",
+            payment_method: id,
+            confirm: true
+        })
+
+        console.log("Payment", payment)
+        res.json({
+            message: "Payment was successful",
+            success: true
+        })
+    } catch (error) {
+        console.log("Error", error)
+        res.json({
+            message: "Payment Failed",
+            success: false
+        })
     }
 }

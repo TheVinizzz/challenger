@@ -50,7 +50,7 @@ const CardProduct: FC<ICardProduct> = ({product, key}) => {
             {product.description}
           </Text>
           <Text color='blue.600' fontSize='2xl'>
-            R${product.price}
+            {Number(product.price).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
           </Text>
         </Stack>
       </CardBody>
